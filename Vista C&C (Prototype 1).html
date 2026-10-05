@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>Vista C&amp;C — Sistema de Votaciones (Prototype 1)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fafaf7;--fg:#22262a;--mut:#6b7178;--box:#fff;--line:#8a9097;--rest:#00a651;--push:#2f6fe4;--bin:#9a6b00;--zone:#eef3ee;--zone2:#eef0f6}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181b;--fg:#e6e8ea;--mut:#9aa1a8;--box:#20252a;--line:#7b838b;--rest:#2ecc71;--push:#6d9bff;--bin:#e0b04a;--zone:#1a2420;--zone2:#1b1e29}}
+:root[data-theme="dark"]{--bg:#15181b;--fg:#e6e8ea;--mut:#9aa1a8;--box:#20252a;--line:#7b838b;--rest:#2ecc71;--push:#6d9bff;--bin:#e0b04a;--zone:#1a2420;--zone2:#1b1e29}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Source Sans 3",system-ui,sans-serif;padding:20px 16px}
+h1{font-size:22px;margin:0 0 4px}p{margin:0 0 14px;color:var(--mut);max-width:70ch}
+.w{overflow-x:auto}svg{width:100%;min-width:760px;height:auto;display:block}
+text{fill:var(--fg);font-family:inherit;font-size:12px}.t{font-weight:600;font-size:13px}.s{fill:var(--mut);font-size:11px}
+.c{fill:var(--box);stroke:var(--line);stroke-width:2}.f{stroke-dasharray:6 4}
+.p{fill:var(--fg)}.r{fill:none;stroke:var(--rest);stroke-width:3}.h{fill:none;stroke:var(--push);stroke-width:3}.b{fill:none;stroke:var(--bin);stroke-width:2.5}
+.d{fill:none;stroke:var(--fg);stroke-width:1.5;stroke-dasharray:4 3}
+.rr{fill:var(--rest);font-size:11px}.hh{fill:var(--push);font-size:11px}.bb{fill:var(--bin);font-size:11px}
+</style></head><body>
+<h1>Vista C&amp;C — Sistema de votaciones distribuido (Prototype 1)</h1>
+<p>Elementos con presencia en tiempo de ejecución. Los puertos (cuadros negros) se asocian a los roles de los conectores (attachments). El navegador muestra delegación de interfaz hacia sus subcomponentes.</p>
+<div class="w"><svg viewBox="0 0 1000 850" role="img" aria-label="Diagrama de componentes y conectores del sistema de votaciones">
+<!-- zonas -->
+<rect x="20" y="280" width="450" height="500" rx="6" fill="var(--zone)" stroke="var(--line)" class="f"/>
+<rect x="530" y="280" width="450" height="500" rx="6" fill="var(--zone2)" stroke="var(--line)" class="f"/>
+<text x="34" y="302" class="t">Zona de identidad</text><text x="544" y="302" class="t">Zona de votación (sin identidad)</text>
+
+<!-- navegador -->
+<rect x="300" y="20" width="400" height="110" class="c"/>
+<text x="500" y="40" text-anchor="middle" class="t">Navegador (Next.js / TypeScript)</text>
+<rect x="320" y="58" width="160" height="48" class="c" style="stroke-width:1.5"/><text x="400" y="78" text-anchor="middle">UI + MFA</text><text x="400" y="94" text-anchor="middle" class="s">login, voto, recibo</text>
+<rect x="520" y="58" width="160" height="48" class="c" style="stroke-width:1.5"/><text x="600" y="78" text-anchor="middle">Módulo cripto</text><text x="600" y="94" text-anchor="middle" class="s">cegado, cifrado, prueba</text>
+<path class="d" d="M500 130 L400 106 M500 130 L600 106"/>
+<rect x="495" y="125" width="10" height="10" class="p"/>
+
+<!-- LB -->
+<rect x="300" y="185" width="400" height="50" class="c"/><text x="500" y="207" text-anchor="middle" class="t">Cloud Armor + Load Balancer</text><text x="500" y="223" text-anchor="middle" class="s">enruta por ruta; no guarda sesión</text>
+<path class="r" d="M500 135 V185"/><text x="510" y="164" class="rr">REST/HTTPS</text>
+<rect x="495" y="180" width="10" height="10" class="p"/>
+
+<!-- identidad -->
+<rect x="140" y="330" width="220" height="60" class="c"/><text x="250" y="355" text-anchor="middle" class="t">Identidad (Python)</text><text x="250" y="373" text-anchor="middle" class="s">login, padrón, firma ciega, confirmación</text>
+<rect x="40" y="450" width="150" height="60" class="c"/><text x="115" y="475" text-anchor="middle" class="t">PostgreSQL</text><text x="115" y="492" text-anchor="middle" class="s">padrón, tokens emitidos</text>
+<rect x="270" y="450" width="170" height="60" class="c"/><text x="355" y="475" text-anchor="middle" class="t">Pub/Sub identidad</text><text x="355" y="492" text-anchor="middle" class="s">eventos y auditoría</text>
+<rect x="270" y="580" width="170" height="60" class="c"/><text x="355" y="605" text-anchor="middle" class="t">Avisos (TypeScript)</text><text x="355" y="622" text-anchor="middle" class="s">correo / SMS</text>
+<path class="r" d="M400 235 L250 330"/><text x="300" y="270" class="rr">REST/HTTPS</text><text x="300" y="284" class="s" style="font-size:10px">con sesión + MFA</text>
+<path class="b" d="M190 390 L115 450"/><text x="40" y="425" class="bb">SQL (TCP)</text>
+<path class="b" d="M310 390 L355 450"/><text x="345" y="425" class="bb">publicar</text>
+<path class="h" d="M355 510 V580"/><text x="365" y="548" class="hh">HTTP push (webhook)</text>
+
+<!-- votación -->
+<rect x="600" y="330" width="220" height="60" class="c"/><text x="710" y="355" text-anchor="middle" class="t">Recepción (Go)</text><text x="710" y="373" text-anchor="middle" class="s">valida token y prueba, firma recibo</text>
+<rect x="550" y="450" width="130" height="60" class="c"/><text x="615" y="475" text-anchor="middle" class="t">Redis</text><text x="615" y="492" text-anchor="middle" class="s">tokens gastados</text>
+<rect x="720" y="450" width="160" height="60" class="c"/><text x="800" y="475" text-anchor="middle" class="t">Pub/Sub votos</text><text x="800" y="492" text-anchor="middle" class="s">papeletas</text>
+<rect x="720" y="580" width="160" height="60" class="c"/><text x="800" y="605" text-anchor="middle" class="t">Escritor (Go)</text><text x="800" y="622" text-anchor="middle" class="s">encadena hashes</text>
+<rect x="550" y="580" width="130" height="60" class="c"/><text x="615" y="605" text-anchor="middle" class="t">MongoDB</text><text x="615" y="622" text-anchor="middle" class="s">papeletas cifradas</text>
+<rect x="740" y="700" width="160" height="50" class="c"/><text x="820" y="722" text-anchor="middle" class="t">Boletín (Rust)</text><text x="820" y="738" text-anchor="middle" class="s">solo lectura</text>
+<rect x="550" y="700" width="150" height="50" class="c f"/><text x="625" y="722" text-anchor="middle" class="t">Escrutinio</text><text x="625" y="738" text-anchor="middle" class="s">fuera del Prototype 1</text>
+<path class="r" d="M600 235 L710 330"/><text x="670" y="270" class="rr">REST/HTTPS</text><text x="640" y="284" class="s" style="font-size:10px">anónimo: sin cookies ni sesión</text>
+<path class="b" d="M660 390 L615 450"/><text x="552" y="425" class="bb">Redis (SETNX)</text>
+<path class="b" d="M770 390 L800 450"/><text x="800" y="425" class="bb">publicar</text>
+<path class="h" d="M800 510 V580"/><text x="810" y="548" class="hh">HTTP push (webhook)</text>
+<path class="b" d="M720 610 H680"/><text x="684" y="574" class="bb" style="font-size:10px">Mongo</text>
+<path class="b" d="M760 700 L675 640"/><path class="b f" d="M600 700 V640"/><text x="668" y="672" class="bb" style="font-size:10px">lectura</text>
+<path class="r" d="M700 210 H950 V725 H900"/><text x="840" y="203" class="rr">REST/HTTPS (solo lectura)</text>
+<g class="p"><rect x="595" y="325" width="10" height="10"/><rect x="595" y="230" width="10" height="10"/><rect x="395" y="230" width="10" height="10"/><rect x="245" y="325" width="10" height="10"/><rect x="695" y="205" width="10" height="10"/><rect x="895" y="720" width="10" height="10"/><rect x="185" y="385" width="10" height="10"/><rect x="305" y="385" width="10" height="10"/><rect x="655" y="385" width="10" height="10"/><rect x="765" y="385" width="10" height="10"/><rect x="715" y="605" width="10" height="10"/></g>
+
+<!-- leyenda -->
+<g transform="translate(20,805)"><path class="r" d="M0 8 H34"/><text x="42" y="12">HTTP tipo 1: REST/HTTPS (petición-respuesta)</text>
+<path class="h" d="M330 8 H364"/><text x="372" y="12">HTTP tipo 2: push / webhook</text>
+<path class="b" d="M560 8 H594"/><text x="602" y="12">Otros protocolos (SQL, Redis, Mongo, publicar)</text>
+<rect x="0" y="22" width="10" height="10" class="p"/><text x="18" y="31">Puerto</text><path class="d" d="M80 27 H114"/><text x="122" y="31">Delegación de interfaz</text><path class="r f" d="M300 27 H334" style="stroke:var(--line)"/><text x="342" y="31">Zona de confianza (nada de identidad cruza a votación)</text></g>
+</svg></div>
+</body></html>
